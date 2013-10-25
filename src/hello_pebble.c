@@ -65,7 +65,55 @@ void handle_timer(AppContextRef ctx, AppTimerHandle handle, uint32_t cookie) {
 }
 
 
+const VibePattern beep_1 = {
+  .durations = (uint32_t []) {2, 150, 50, 10},
+  .num_segments = 4
+};
+const VibePattern beep_2 = {
+  .durations = (uint32_t []) {2, 150, 50, 150, 50, 10},
+  .num_segments = 6
+};
+const VibePattern beep_3 = {
+  .durations = (uint32_t []) {2, 150, 50, 150, 50, 150, 50, 10},
+  .num_segments = 8
+};
+
+const VibePattern beep_31 = {
+  .durations = (uint32_t []) {2, 150, 150, 150, 50, 10},
+  .num_segments = 6
+};
+
+
 // Called once per second
+void vibe() {
+
+  if(! timerRunning){ return; }
+
+  switch(teaMode)
+  {
+    case 0:
+      vibes_enqueue_custom_pattern(beep_31);
+      break;
+    case 1:
+      vibes_short_pulse();
+      break;
+    case 2:
+      vibes_enqueue_custom_pattern(beep_1);
+      break;
+    case 3:
+      vibes_enqueue_custom_pattern(beep_2);
+      break;
+    case 4:
+      vibes_enqueue_custom_pattern(beep_3);
+      break;
+    default:
+      vibes_short_pulse();
+      break;
+  }
+
+
+}
+
 void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t)
 {
 
@@ -80,7 +128,9 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t)
 
   if (seconds <= 0)
   {
-    vibes_double_pulse();
+    vibe();
+
+      /*     vibes_double_pulse(); */
     seconds = 0;
     text_layer_set_text(&timeLayer, times[seconds]);
     hidden = true;
@@ -90,11 +140,23 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t)
 
 }
 
+
+
 void updateTeaMode()
 {
+
+  /*   if(teaMode <= 4){ vibe(); } */
+  if(teaMode > 4){ teaMode = 2; }
+
+  vibe();
+
   switch(teaMode)
   {
     case 0:
+
+      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_31); } */
+      /*       vibe(); */
+
       text_layer_set_text(&teaModeLayer, "clear");
       text_layer_set_text(&temperatureLayer, "");
       /*       text_layer_set_text(&temperatureLayer, "--"); */
@@ -106,19 +168,41 @@ void updateTeaMode()
       seconds = 15;
       break;
     case 2:
-      text_layer_set_text(&teaModeLayer, "3/2");
+
+
+      // Pull into function!
+      // Vibe pattern: ON for 200ms, OFF for 100ms, ON for 400ms:
+      /*       static const uint32_t const segments[] = { 100 }; */
+      /*       VibePattern pat = { */
+      /*         .durations = segments, */
+      /*         .num_segments = ARRAY_LENGTH(segments), */
+      /*       }; */
+      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_1); } */
+      /*       vibe(); */
+
+
+      /*       vibes_short_pulse(); */
+      text_layer_set_text(&teaModeLayer, "one");
       text_layer_set_text(&temperatureLayer, "");
       seconds = 90;
       break;
     case 3:
-      text_layer_set_text(&teaModeLayer, "three");
+
+      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_2); } */
+      /*       vibe(); */
+
+      /*       vibes_double_pulse(); */
+      text_layer_set_text(&teaModeLayer, "two");
       text_layer_set_text(&temperatureLayer, "");
-      seconds = 180;
+      seconds = 150;
       break;
     case 4:
-      text_layer_set_text(&teaModeLayer, "four");
+      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_3); } */
+      /*       vibe(); */
+
+      text_layer_set_text(&teaModeLayer, "three");
       text_layer_set_text(&temperatureLayer, "");
-      seconds = 240;
+      seconds = 210;
       break;
       /*     case 5: */
       /*       text_layer_set_text(&teaModeLayer, "five"); */
@@ -130,10 +214,11 @@ void updateTeaMode()
       /*       text_layer_set_text(&temperatureLayer, "195°"); */
       /*       seconds = 180; */
       /*       break; */
-    default:
-      teaMode = 0;
-      updateTeaMode();
-      break;
+
+      /*     default: */
+      /*       teaMode = 2; */
+      /*       updateTeaMode(); */
+      /*       break; */
   }
   hidden = false;
   layer_set_hidden(&timeLayer.layer, hidden);
@@ -145,34 +230,44 @@ void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) 
   (void)window;
 
   timerRunning = !timerRunning;
-  if(!timerRunning)
-  {
+  /*   if(!timerRunning) */
+  /*   { */
     updateTeaMode();
-  }
-}
-
-void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
-  (void)recognizer;
-  (void)window;
-
-  if(!timerRunning)
-  {
-    teaMode ++;
-    updateTeaMode();
-  }
+    /*   } */
 }
 
 void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
   (void)recognizer;
   (void)window;
-  seconds += 15;
-  if (seconds >= 600)
-  {
-    seconds = 599;
-  }
-  hidden = false;
-  layer_set_hidden(&timeLayer.layer, hidden);
-  text_layer_set_text(&timeLayer, times[seconds]);
+
+  /*   if(!timerRunning) */
+  /*   { */
+  timerRunning = true;
+
+  teaMode++;
+  updateTeaMode();
+    /*   } */
+
+
+}
+
+void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
+
+  /*   timerRunning = false;   // Make it just turn timer off */
+  timerRunning = true;   // Make it just turn timer off
+  teaMode = 0;
+  updateTeaMode();
+
+  /*   (void)recognizer; */
+  /*   (void)window; */
+  /*   seconds += 15; */
+  /*   if (seconds >= 600) */
+  /*   { */
+  /*     seconds = 599; */
+  /*   } */
+  /*   hidden = false; */
+  /*   layer_set_hidden(&timeLayer.layer, hidden); */
+  /*   text_layer_set_text(&timeLayer, times[seconds]); */
 }
 
 
@@ -233,18 +328,21 @@ void handle_init(AppContextRef app_ctx) {
   // Init the text layer used to show the Temperature
   text_layer_init(&temperatureLayer, GRect(4, 104, 144-4, 40));
   text_layer_set_text_color(&temperatureLayer, GColorWhite);
+  text_layer_set_text_alignment(&temperatureLayer, GTextAlignmentCenter);
   text_layer_set_background_color(&temperatureLayer, GColorClear);
   text_layer_set_font(&temperatureLayer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
 
   // Init the text layer used to show the Tea Mode
   text_layer_init(&teaModeLayer, GRect(4, 4, 144-4, 40));
   text_layer_set_text_color(&teaModeLayer, GColorWhite);
+  text_layer_set_text_alignment(&teaModeLayer, GTextAlignmentCenter);
   text_layer_set_background_color(&teaModeLayer, GColorClear);
   text_layer_set_font(&teaModeLayer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
 
   // Init the text layer used to show the time left
-  text_layer_init(&timeLayer, GRect( 4, 44, 144-4, 60));
+  text_layer_init(&timeLayer, GRect(4, 44, 144-4, 60));
   text_layer_set_text_color(&timeLayer, GColorWhite);
+  text_layer_set_text_alignment(&timeLayer, GTextAlignmentCenter);
   text_layer_set_background_color(&timeLayer, GColorClear);
   /*   text_layer_set_font(&timeLayer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD)); */
   text_layer_set_font(&timeLayer, fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
@@ -262,23 +360,6 @@ void handle_init(AppContextRef app_ctx) {
   window_set_click_config_provider(&window, (ClickConfigProvider) config_provider);
 }
 
-// This usually won't need to be modified
-
-void click_config_provider(ClickConfig **config, Window *window) {
-  (void)window;
-
-  config[BUTTON_ID_SELECT]->click.handler = (ClickHandler) select_single_click_handler;
-
-
-  config[BUTTON_ID_UP]->click.handler = (ClickHandler) up_single_click_handler;
-  config[BUTTON_ID_UP]->click.repeat_interval_ms = 100;
-
-  config[BUTTON_ID_DOWN]->click.handler = (ClickHandler) down_single_click_handler;
-  config[BUTTON_ID_DOWN]->click.repeat_interval_ms = 100;
-}
-
-
-
 void pbl_main(void *params) {
   PebbleAppHandlers handlers = {
 
@@ -295,6 +376,8 @@ void pbl_main(void *params) {
   };
   app_event_loop(params, &handlers);
 }
+
+
 
 
 
