@@ -84,8 +84,9 @@ const VibePattern beep_31 = {
 };
 
 const VibePattern beep_blip = {
-  .durations = (uint32_t []) {2, 10, 30, 60, 30, 10},
-  .num_segments = 6
+  /*   .durations = (uint32_t []) {2, 10, 30, 60, 30, 10}, */
+  .durations = (uint32_t []) {2, 150, 30, 10},
+  .num_segments = 4
 };
 
 
@@ -230,7 +231,7 @@ void updateTeaMode()
   text_layer_set_text(&timeLayer, times[seconds]);
 }
 
-void select_long_click_handler(ClickRecognizerRef recognizer, Window *window) {
+void select_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   /*   timerRunning = !timerRunning; */
   timerRunning = false;
   updateTeaMode();
@@ -242,14 +243,14 @@ void select_long_click_handler(ClickRecognizerRef recognizer, Window *window) {
 }
 
 
-void up_long_click_handler(ClickRecognizerRef recognizer, Window *window) {
+void up_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   timerRunning = true;
   /*   teaMode++;   // Cycle through */
   teaMode = 1;
   updateTeaMode();
 }
 
-void down_long_click_handler(ClickRecognizerRef recognizer, Window *window) {
+void down_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   timerRunning = true;   // Make it just turn timer off
   teaMode = 0;
   updateTeaMode();
@@ -305,12 +306,30 @@ void config_provider(ClickConfig **config, Window *window) {
 
   /*   config[BUTTON_ID_DOWN]->click.repeat_interval_ms = 100; */
 
-  config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) up_long_click_handler;
-  config[BUTTON_ID_UP]->long_click.delay_ms = 300;
-  config[BUTTON_ID_SELECT]->long_click.handler = (ClickHandler) select_long_click_handler;
-  config[BUTTON_ID_SELECT]->long_click.delay_ms = 300;
-  config[BUTTON_ID_DOWN]->long_click.handler = (ClickHandler) down_long_click_handler;
-  config[BUTTON_ID_DOWN]->long_click.delay_ms = 300;
+
+
+
+  /*   config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) up_long_click_handler; */
+  /*   config[BUTTON_ID_UP]->long_click.delay_ms = 300; */
+  /*   config[BUTTON_ID_SELECT]->long_click.handler = (ClickHandler) select_long_click_handler; */
+  /*   config[BUTTON_ID_SELECT]->long_click.delay_ms = 300; */
+  /*   config[BUTTON_ID_DOWN]->long_click.handler = (ClickHandler) down_long_click_handler; */
+  /*   config[BUTTON_ID_DOWN]->long_click.delay_ms = 300; */
+
+
+  config[BUTTON_ID_UP]->multi_click.handler = (ClickHandler) up_double_click_handler;
+  config[BUTTON_ID_UP]->multi_click.min = 2;
+  config[BUTTON_ID_UP]->multi_click.max = 2;
+
+  config[BUTTON_ID_SELECT]->multi_click.handler = (ClickHandler) select_double_click_handler;
+  config[BUTTON_ID_SELECT]->multi_click.min = 2;
+  config[BUTTON_ID_SELECT]->multi_click.max = 2;
+
+  config[BUTTON_ID_DOWN]->multi_click.handler = (ClickHandler) down_double_click_handler;
+  config[BUTTON_ID_DOWN]->multi_click.min = 2;
+  config[BUTTON_ID_DOWN]->multi_click.max = 2;
+
+
 
 
 
@@ -460,14 +479,14 @@ void pbl_main(void *params) {
 /*
 /projects/hello_pebble/src/hello_pebble.c
   > Click Handlers
-  short
+  single
   | void up_single_click_handler
   | void select_single_click_handler
   | void down_single_click_handler
-  long
-  | void up_long_click_handler
-  | void select_long_click_handler
-  | void down_long_click_handler
+  double
+  | void up_double_click_handler
+  | void select_double_click_handler
+  | void down_double_click_handler
 
   > Called when buttons clicked
   | void updateTeaMode()
