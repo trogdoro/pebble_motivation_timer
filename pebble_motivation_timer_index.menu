@@ -1,0 +1,7 @@
+- compile/
+  @/projects/pebble_motivation_timer/
+    % ./waf build
+- deploy/
+  @/projects/pebble_motivation_timer/
+    - build/
+      $ scp pebble_motivation_timer.pbw xiki@xiki.org:/var/www/pairtimer.com/

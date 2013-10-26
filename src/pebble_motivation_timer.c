@@ -6,7 +6,7 @@
 // Unique ID For App...
 
 #define MY_UUID { 0xFE, 0x52, 0x9C, 0xCE, 0x92, 0xF8, 0x4D, 0x26, 0xB7, 0xB6, 0xBD, 0xCE, 0x37, 0x7B, 0xA8, 0x9C }
-PBL_APP_INFO(MY_UUID, "Timez", "The Lord", 1, 0, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
+PBL_APP_INFO(MY_UUID, "Motivation Timer", "Craig Muth", 1, 0, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
 
 Window window;
 /* TextLayer hello_layer; */
@@ -309,11 +309,9 @@ void config_provider(ClickConfig **config, Window *window) {
 
 
 
-  /*   config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) up_long_click_handler; */
-  /*   config[BUTTON_ID_UP]->long_click.delay_ms = 300; */
-  /*   config[BUTTON_ID_SELECT]->long_click.handler = (ClickHandler) select_long_click_handler; */
-  /*   config[BUTTON_ID_SELECT]->long_click.delay_ms = 300; */
-  /*   config[BUTTON_ID_DOWN]->long_click.handler = (ClickHandler) down_long_click_handler; */
+  config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) select_double_click_handler;
+  config[BUTTON_ID_SELECT]->long_click.handler = (ClickHandler) select_double_click_handler;
+  config[BUTTON_ID_DOWN]->long_click.handler = (ClickHandler) select_double_click_handler;
   /*   config[BUTTON_ID_DOWN]->long_click.delay_ms = 300; */
 
 
@@ -477,7 +475,7 @@ void pbl_main(void *params) {
 
 
 /*
-/projects/hello_pebble/src/hello_pebble.c
+/projects/pebble_motivation_timer/src/pebble_motivation_timer.c
   > Click Handlers
   single
   | void up_single_click_handler

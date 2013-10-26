@@ -1,7 +1,0 @@
-- compile/
-  @/projects/hello_pebble/
-    % ./waf build
-- deploy/
-  @/projects/hello_pebble/
-    - build/
-      $ scp hello_pebble.pbw xiki@xiki.org:/var/www/pairtimer.com/
