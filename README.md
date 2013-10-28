@@ -16,7 +16,7 @@ For certian people this can be a low-stress way of getting motivated.  You can d
 - Down button double-click: "clear mind" (0:45)
 - Up button double-click: "think" (0:15)
 
-Try doing a "clear mind" timer followed by a "think" timer (15 seconds of intensive thinking) to get started.
+Try doing a "clear mind" timer followed by a "think" timer (15 seconds of intensive thinking) every now and then.
 
 ## Credits
 Created by Craig Muth.  Thanks to the TeaTimer app, for inspiration and a starting point!
