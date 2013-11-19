@@ -11,7 +11,7 @@ Help motivate yourself by setting short timers for tasks, as you do them.  Press
   - or long-press any button
 
 ## Motivation
-For certian people, setting short timers for tasks can be a low-stress way of getting motivated.  You can start and stop timers without looking at the watch.  It takes only one button press to start a timer, even when a timer is already running (it cancels the current one).
+For certain people, setting short timers for tasks can be a low-stress way of getting motivated.  You can start and stop timers without looking at the watch.  It takes only one button press to start a timer, even when a timer is already running (it cancels the current one).
 
 ## Advanced timers
 
