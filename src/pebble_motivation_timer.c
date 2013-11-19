@@ -4,7 +4,7 @@
 
 
 #define MY_UUID { 0xFE, 0x52, 0x9C, 0xCE, 0x92, 0xF8, 0x4D, 0x26, 0xB7, 0xB6, 0xBD, 0xCE, 0x37, 0x7B, 0xA8, 0x9C }
-PBL_APP_INFO(MY_UUID, "Motivation Timer", "Craig Muth", 1, 0, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
+PBL_APP_INFO(MY_UUID, "Motivation", "Craig Muth", 1, 1, RESOURCE_ID_MENU_ICON, APP_INFO_STANDARD_APP);
 
 Window window;
 /* TextLayer hello_layer; */
@@ -201,6 +201,15 @@ void select_double_click_handler(ClickRecognizerRef recognizer, Window *window) 
   }
 }
 
+void temp_dotsies_sentence_handler(ClickRecognizerRef recognizer, Window *window) {
+
+  /* pebble.menu */
+  /*   | - api/ */
+  /*   |   - play beep/ */
+
+  /*     vibes_enqueue_custom_pattern(beep_blip); */
+}
+
 
 void up_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   timerRunning = true;
@@ -269,7 +278,11 @@ void config_provider(ClickConfig **config, Window *window) {
 
 
 
+  /*   config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) temp_dotsies_sentence_handler; */
   config[BUTTON_ID_UP]->long_click.handler = (ClickHandler) select_double_click_handler;
+
+
+
   config[BUTTON_ID_SELECT]->long_click.handler = (ClickHandler) select_double_click_handler;
   config[BUTTON_ID_DOWN]->long_click.handler = (ClickHandler) select_double_click_handler;
   /*   config[BUTTON_ID_DOWN]->long_click.delay_ms = 300; */

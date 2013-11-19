@@ -1,5 +1,6 @@
 - compile/
   @/projects/pebble_motivation_timer/
+    % ./waf build | grep success
     % ./waf build
 - deploy/
   @/projects/pebble_motivation_timer/build/
