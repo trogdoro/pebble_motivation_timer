@@ -287,23 +287,6 @@ void config_provider(ClickConfig **config, Window *window) {
   config[BUTTON_ID_DOWN]->multi_click.min = 2;
   config[BUTTON_ID_DOWN]->multi_click.max = 2;
 
-
-
-
-
-/*
-  // multi click config:
-  config[BUTTON_ID_SELECT]->multi_click.handler = (ClickHandler) select_multi_click_handler;
-  config[BUTTON_ID_SELECT]->multi_click.min = 2;
-  config[BUTTON_ID_SELECT]->multi_click.max = 10;
-  config[BUTTON_ID_UP]->multi_click.last_click_only = true;
-
-  void select_multi_click_handler(ClickRecognizerRef recognizer, Window *window) {
-    # called for multi-clicks
-    const uint16_t count = click_number_of_clicks_counted(recognizer);
-  }
- */
-
 }
 
 void populateTimeArray()
@@ -398,40 +381,6 @@ void pbl_main(void *params) {
   };
   app_event_loop(params, &handlers);
 }
-
-
-
-
-
-
-/* // When app loads */
-
-/* void handle_init(AppContextRef ctx) { */
-
-/*   window_init(&window, "Window Name"); */
-/*   window_stack_push(&window, true /\* Animated *\/); */
-
-/*   /\*   text_layer_init(&hello_layer, GRect(0, 65, 144, 30)); *\/ */
-/*   /\*   text_layer_set_text_alignment(&hello_layer, GTextAlignmentCenter); *\/ */
-/*   /\*   text_layer_set_text(&hello_layer, "Hello Again!"); *\/ */
-/*   /\*   text_layer_set_font(&hello_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21)); *\/ */
-/*   /\*   layer_add_child(&window.layer, &hello_layer.layer); *\/ */
-
-
-
-
-
-/* } */
-
-
-/* void pbl_main(void *params) { */
-/*   PebbleAppHandlers handlers = { */
-/*     .init_handler = &handle_init */
-/*   }; */
-/*   app_event_loop(params, &handlers); */
-/* } */
-
-
 
 
 /*
