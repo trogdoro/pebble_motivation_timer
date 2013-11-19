@@ -3,15 +3,13 @@
 #include "pebble_fonts.h"
 
 
-// Unique ID For App...
-
 #define MY_UUID { 0xFE, 0x52, 0x9C, 0xCE, 0x92, 0xF8, 0x4D, 0x26, 0xB7, 0xB6, 0xBD, 0xCE, 0x37, 0x7B, 0xA8, 0x9C }
 PBL_APP_INFO(MY_UUID, "Motivation Timer", "Craig Muth", 1, 0, DEFAULT_MENU_ICON, APP_INFO_STANDARD_APP);
 
 Window window;
 /* TextLayer hello_layer; */
 
-TextLayer teaModeLayer;
+TextLayer modeLayer;
 TextLayer timeLayer; //Timer
 TextLayer temperatureLayer;
 
@@ -23,7 +21,7 @@ TextLayer textLayer;
 bool timerRunning = false;
 bool hidden = false;
 
-short teaMode = 0;
+short mode = 1;
 
 int seconds = 120;
 static char times[600][6];
@@ -66,7 +64,7 @@ void handle_timer(AppContextRef ctx, AppTimerHandle handle, uint32_t cookie) {
 
 
 const VibePattern beep_1 = {
-  .durations = (uint32_t []) {2, 150, 50, 10},
+  .durations = (uint32_t []) {2, 200, 50, 10},
   .num_segments = 4
 };
 const VibePattern beep_2 = {
@@ -95,23 +93,26 @@ void vibe() {
 
   if(! timerRunning){ return; }
 
-  switch(teaMode)
-  {
+  // Beep based on mode...
+
+  switch(mode)
+    {
     case 0:
       vibes_enqueue_custom_pattern(beep_31);
       break;
-    case 1:
-      vibes_short_pulse();
-      break;
-    case 2:
+    case 1:   // Short
       vibes_enqueue_custom_pattern(beep_1);
       break;
-    case 3:
+    case 2:   // Medium
       vibes_enqueue_custom_pattern(beep_2);
       break;
-    case 4:
+    case 3:   // Long
       vibes_enqueue_custom_pattern(beep_3);
       break;
+    case 4:
+      vibes_short_pulse();
+      break;
+
     default:
       vibes_short_pulse();
       break;
@@ -148,84 +149,42 @@ void handle_second_tick(AppContextRef ctx, PebbleTickEvent *t)
 
 
 
-void updateTeaMode()
+void updateMode()
 {
 
-  /*   if(teaMode > 4){ teaMode = 2; } */
-  if(teaMode > 4){ teaMode = 0; }
+  /*   if(mode > 4){ mode = 2; } */
+  if(mode > 4){ mode = 0; }
 
   vibe();
 
-  switch(teaMode)
+  // Reset everything based on mode...
+
+  switch(mode)
   {
     case 0:
-
-      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_31); } */
-      /*       vibe(); */
-
-      text_layer_set_text(&teaModeLayer, "clear mind");
-      text_layer_set_text(&temperatureLayer, "");
-      /*       text_layer_set_text(&temperatureLayer, "--"); */
-      seconds = 45;
-      break;
-    case 1:
-      text_layer_set_text(&teaModeLayer, "think");
-      text_layer_set_text(&temperatureLayer, "");
+      text_layer_set_text(&modeLayer, "very short");
       seconds = 15;
       break;
+    case 1:
+      text_layer_set_text(&modeLayer, "short");
+      seconds = 45;
+      break;
     case 2:
-
-
-      // Pull into function!
-      // Vibe pattern: ON for 200ms, OFF for 100ms, ON for 400ms:
-      /*       static const uint32_t const segments[] = { 100 }; */
-      /*       VibePattern pat = { */
-      /*         .durations = segments, */
-      /*         .num_segments = ARRAY_LENGTH(segments), */
-      /*       }; */
-      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_1); } */
-      /*       vibe(); */
-
-
-      /*       vibes_short_pulse(); */
-      text_layer_set_text(&teaModeLayer, "short");
-      text_layer_set_text(&temperatureLayer, "");
+      text_layer_set_text(&modeLayer, "medium");
       seconds = 90;
       break;
     case 3:
-
-      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_2); } */
-      /*       vibe(); */
-
-      /*       vibes_double_pulse(); */
-      text_layer_set_text(&teaModeLayer, "medium");
-      text_layer_set_text(&temperatureLayer, "");
+      text_layer_set_text(&modeLayer, "long");
       seconds = 150;
       break;
     case 4:
-      /*       if(timerRunning){ vibes_enqueue_custom_pattern(beep_3); } */
-      /*       vibe(); */
-
-      text_layer_set_text(&teaModeLayer, "long");
-      text_layer_set_text(&temperatureLayer, "");
+      text_layer_set_text(&modeLayer, "very long");
       seconds = 210;
       break;
-      /*     case 5: */
-      /*       text_layer_set_text(&teaModeLayer, "five"); */
-      /*       text_layer_set_text(&temperatureLayer, "--"); */
-      /*       seconds = 300; */
-      /*       break; */
-      /*     case 6: */
-      /*       text_layer_set_text(&teaModeLayer, "Oolong"); */
-      /*       text_layer_set_text(&temperatureLayer, "195°"); */
-      /*       seconds = 180; */
-      /*       break; */
-
-      /*     default: */
-      /*       teaMode = 2; */
-      /*       updateTeaMode(); */
-      /*       break; */
   }
+
+  text_layer_set_text(&temperatureLayer, "");
+
   hidden = false;
   layer_set_hidden(&timeLayer.layer, hidden);
   text_layer_set_text(&timeLayer, times[seconds]);
@@ -234,7 +193,7 @@ void updateTeaMode()
 void select_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   /*   timerRunning = !timerRunning; */
   timerRunning = false;
-  updateTeaMode();
+  updateMode();
 
   // If turned it off, make it beep really quickly
   if(!timerRunning){
@@ -245,17 +204,16 @@ void select_double_click_handler(ClickRecognizerRef recognizer, Window *window) 
 
 void up_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   timerRunning = true;
-  /*   teaMode++;   // Cycle through */
-  teaMode = 1;
-  updateTeaMode();
+  /*   mode++;   // Cycle through */
+  mode = 4;
+  updateMode();
 }
 
 void down_double_click_handler(ClickRecognizerRef recognizer, Window *window) {
   timerRunning = true;   // Make it just turn timer off
-  teaMode = 0;
-  updateTeaMode();
+  mode = 0;
+  updateMode();
 }
-
 
 
 // Long Click handlers...
@@ -265,8 +223,8 @@ void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
   /*   if(!timerRunning) */
   /*   { */
   timerRunning = true;
-  teaMode = 4;
-  updateTeaMode();
+  mode = 3;
+  updateMode();
 }
 
 void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
@@ -274,17 +232,17 @@ void select_single_click_handler(ClickRecognizerRef recognizer, Window *window) 
   /*   if(!timerRunning) */
   /*   { */
   timerRunning = true;
-  teaMode = 3;
-  updateTeaMode();
+  mode = 2;
+  updateMode();
 }
 
 void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
 
-  /*   text_layer_set_text(&teaModeLayer, "test"); */
+  /*   text_layer_set_text(&modeLayer, "test"); */
 
   timerRunning = true;
-  teaMode = 2;
-  updateTeaMode();
+  mode = 1;
+  updateMode();
 }
 
 
@@ -296,6 +254,8 @@ void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
 
 void config_provider(ClickConfig **config, Window *window) {
   (void)window;
+
+  // Map Buttons to Methods...
 
   config[BUTTON_ID_UP]->click.handler = (ClickHandler) up_single_click_handler;
   /*   config[BUTTON_ID_UP]->click.repeat_interval_ms = 100; */
@@ -339,7 +299,7 @@ void config_provider(ClickConfig **config, Window *window) {
   config[BUTTON_ID_UP]->multi_click.last_click_only = true;
 
   void select_multi_click_handler(ClickRecognizerRef recognizer, Window *window) {
-    ... called for multi-clicks ...
+    # called for multi-clicks
     const uint16_t count = click_number_of_clicks_counted(recognizer);
   }
  */
@@ -395,11 +355,11 @@ void handle_init(AppContextRef app_ctx) {
   text_layer_set_font(&temperatureLayer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
 
   // Init the text layer used to show the Tea Mode
-  text_layer_init(&teaModeLayer, GRect(4, 4, 144-4, 40));
-  text_layer_set_text_color(&teaModeLayer, GColorWhite);
-  text_layer_set_text_alignment(&teaModeLayer, GTextAlignmentCenter);
-  text_layer_set_background_color(&teaModeLayer, GColorClear);
-  text_layer_set_font(&teaModeLayer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  text_layer_init(&modeLayer, GRect(4, 4, 144-4, 40));
+  text_layer_set_text_color(&modeLayer, GColorWhite);
+  text_layer_set_text_alignment(&modeLayer, GTextAlignmentCenter);
+  text_layer_set_background_color(&modeLayer, GColorClear);
+  text_layer_set_font(&modeLayer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
 
   // Init the text layer used to show the time left
   text_layer_init(&timeLayer, GRect(4, 44, 144-4, 60));
@@ -412,11 +372,11 @@ void handle_init(AppContextRef app_ctx) {
   // (This is why it's a good idea to have a separate routine to do the update itself.)
   handle_second_tick(app_ctx, NULL);
 
-  updateTeaMode();
+  updateMode();
 
   layer_add_child(&window.layer, &timeLayer.layer);
   layer_add_child(&window.layer, &temperatureLayer.layer);
-  layer_add_child(&window.layer, &teaModeLayer.layer);
+  layer_add_child(&window.layer, &modeLayer.layer);
 
   // Attach our desired button functionality
   window_set_click_config_provider(&window, (ClickConfigProvider) config_provider);
@@ -444,7 +404,7 @@ void pbl_main(void *params) {
 
 
 
-/* // When app loads... */
+/* // When app loads */
 
 /* void handle_init(AppContextRef ctx) { */
 
@@ -487,5 +447,5 @@ void pbl_main(void *params) {
   | void down_double_click_handler
 
   > Called when buttons clicked
-  | void updateTeaMode()
+  | void updateMode()
  */

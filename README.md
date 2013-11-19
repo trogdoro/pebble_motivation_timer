@@ -3,24 +3,27 @@ An app for Pebble Smartwatches.
 
 Help motivate yourself by setting short timers for tasks, as you do them.  Press any button to start a pre-programmed timer.  After they count down, they buzz until you stop them.
 
-- Down button: "short" (1:30)
-- Middle button: "medium" (2:30)
-- Up button: "long" (3:30)
+- Up button: "long" (2:30)
+- Middle button: "medium" (1:30)
+- Down button: "short" (0:45)
+
 - Middle button double-click: stop the buzzing
   - or long-press any button
 
 ## Motivation
-For certian people this can be a low-stress way of getting motivated.  You can do everything without looking at the watch.  It takes only one button press to start a timer, even when a timer is already running (it cancels the current one).
+For certian people, setting short timers for tasks can be a low-stress way of getting motivated.  You can start and stop timers without looking at the watch.  It takes only one button press to start a timer, even when a timer is already running (it cancels the current one).
 
 ## Advanced timers
-- Down button double-click: "clear mind" (0:45)
-- Up button double-click: "think" (0:15)
 
-Try doing a "clear mind" timer followed by a "think" timer (15 seconds of intensive thinking) every now and then.
+- Up button double-click: "long" (2:30)
+- Down button double-click: "very short" (0:30)
+
+## Tips
+
+Try doing a "short" timer to clear your mind, followed by a "very short" timer (15 seconds of intensive thinking about what your next task could be) to help get started when you're feeling lazy / scatterbrained.
 
 ## Credits
 Created by Craig Muth.  Thanks to the TeaTimer app, for inspiration and a starting point!
-
 
 ## Download and install
 - http://www.mypebblefaces.com/apps/9730/6860/
